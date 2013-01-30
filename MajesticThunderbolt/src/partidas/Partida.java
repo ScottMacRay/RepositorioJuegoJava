@@ -28,7 +28,7 @@ public class Partida extends Observable{
 	int tipo_escenario;
 	ArrayList<Jugador> jugadores;
 	ArrayList<AlienSpaceShip> aliens;
-	Set<Drawable> drawables;
+	Set<Drawable> dibujables;
 	Escenario escenario;
 	
 	//Metodo constructor
@@ -37,7 +37,7 @@ public class Partida extends Observable{
 		this.numTotal_jugadores = numero_jugadores;
 		this.numTotal_aliens = 
 		this.tipo_escenario = tipo_escenario;
-		this.drawables= new HashSet<Drawable>();
+		this.dibujables= new HashSet<Drawable>();
 		
 		crearJugadores();
 		crearEscenario();
@@ -62,7 +62,7 @@ public class Partida extends Observable{
 		creditos= pedirCreditos();
 		jugador= new Jugador(nombre, creditos, numJugador);
 		this.jugadores.add(jugador);
-		this.drawables.add(jugador.getNave());
+		this.dibujables.add(jugador.getNave());
 	}
 	
 	private void crearEscenario(){
@@ -82,7 +82,7 @@ public class Partida extends Observable{
 	
 	private void crearAlien(){
 		AlienSpaceShip alien= new AlienSpaceShip();
-		drawables.add(alien);
+		dibujables.add(alien);
 	}
 
 	private void crearPlaneta() {
@@ -114,13 +114,7 @@ public class Partida extends Observable{
 		super.notifyObservers(pantalla);
 	}
 
-	public Set<Drawable> moverNaveIzquierda(int idNave) {
-		NaveEspacial nave= this.jugadores.get(idNave).getNave();
-		nave.MoveShipLeft();
-		calcularInfluencia();
-		return this.drawables;
-	}
-
+	
 	/*
 	 * RVA: este metodo debe realizar todos los calculos sobre las posiciones de las naves y calcular las colisiones.
 	 */
@@ -157,25 +151,42 @@ public class Partida extends Observable{
 		
 	}
 
-	public Set<Drawable> moverNaveDerecha(int idNave) {
-		NaveEspacial nave= this.jugadores.get(idNave).getNave();
-		nave.MoveShipRight();
-		calcularInfluencia();
-		return this.drawables;
-	}
+	
 
-	public Set<Drawable> moverNaveArriba(int idNave) {
-		NaveEspacial nave= this.jugadores.get(idNave).getNave();
-		nave.MoveShipUp();
+	public Set<Drawable> calcularResultadoAccion(Teclas teclado, int idNave) {
+		if(teclado.izquierda)  moverNaveIzquierda(idNave);
+	    if (teclado.derecha)   moverNaveDerecha(idNave);
+	    if (teclado.arriba)    moverNaveArriba(idNave);
+	    if (teclado.abajo)     moverNaveAbajo(idNave);
+	    if (!teclado.izquierda && !teclado.derecha)  equilibrarNave(idNave);
 		calcularInfluencia();
-		return this.drawables;
+		return this.dibujables;
 	}
-
-	public Set<Drawable> equilibrarNave(int idNave) {
+	
+	private void moverNaveAbajo(int idNave) {
 		NaveEspacial nave= this.jugadores.get(idNave).getNave();
 		nave.MoveShipDown();
-		calcularInfluencia();
-		return this.drawables;
+	}
+
+	private void moverNaveIzquierda(int idNave) {
+		NaveEspacial nave= this.jugadores.get(idNave).getNave();
+		nave.MoveShipLeft();
+	}
+
+
+	private void moverNaveDerecha(int idNave) {
+		NaveEspacial nave= this.jugadores.get(idNave).getNave();
+		nave.MoveShipRight();
+	}
+
+	private void moverNaveArriba(int idNave) {
+		NaveEspacial nave= this.jugadores.get(idNave).getNave();
+		nave.MoveShipUp();
+	}
+
+	private void equilibrarNave(int idNave) {
+		NaveEspacial nave= this.jugadores.get(idNave).getNave();
+		nave.MoveShipDown();
 	}
 	
 	

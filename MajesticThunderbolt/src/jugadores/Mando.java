@@ -6,11 +6,17 @@ import java.awt.event.KeyEvent;
 public class Mando extends KeyAdapter{
 	
 	Teclas teclas;
-
+/*
+ * public boolean arriba(){ return teclas.arriba;}
+ * public boolean abajo();
+ * public boolean izquierda();
+ * public boolean derecha();
+ */
 	public Mando() {
 		super();
 		this.teclas= new Teclas();
 	}
+
 	
 
 	public void keyPressed(KeyEvent e) {

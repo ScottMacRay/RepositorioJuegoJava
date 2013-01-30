@@ -55,12 +55,9 @@ public class Escenario implements Observer, GLEventListener{
 	public void display(GLAutoDrawable arg0) {
 		// TODO Auto-generated method stub
 		//RVA: suponemos que aqui se capturan las acciones de teclado.
-
-		if(teclado.izquierda)  this.dibujables= this.controlador.moverNaveIzquierda();
-	    if (teclado.derecha) this.dibujables= this.controlador.moverNaveDerecha();
-	    if (teclado.arriba) this.dibujables= this.controlador.moverNaveArriba();
-	    if (teclado.abajo) this.dibujables= this.controlador.moverNaveAbajo();
-	    if (!teclado.izquierda && !teclado.derecha) this.dibujables= this.controlador.equilibrarNave();
+		
+		this.dibujables= this.controlador.recogerAcciones(teclado);
+		
 		
 		
 	}
@@ -75,6 +72,7 @@ public class Escenario implements Observer, GLEventListener{
 	public void init(GLAutoDrawable arg0) {
 		// TODO Auto-generated method stub
 		 // Key Listener
+		//this.controlador.
         //addKeyListener(this.jugador_local.getMando());
 	}
 
