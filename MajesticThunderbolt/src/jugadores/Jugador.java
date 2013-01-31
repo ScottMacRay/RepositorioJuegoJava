@@ -3,7 +3,7 @@ package jugadores;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
-import naves.NaveEspacial;
+import naves.SpaceShip;
 import naves.Shoot;
 
 
@@ -17,14 +17,14 @@ public class Jugador {
 	private int tiempo;
 	private Shoot disparo;
 	private Mando mando;
-	private NaveEspacial nave;
+	private SpaceShip nave;
 	
 	public Jugador(String nombre, int creditos, int numero1) {
 		super();
 		this.nombre = nombre;
 		this.numero= numero1;
 		this.creditos = creditos;
-		this.nave = new NaveEspacial(this.numero);
+		this.nave = new SpaceShip();
 	}
 
 
@@ -60,11 +60,11 @@ public class Jugador {
 		this.mando = mando;
 	}
 
-	public NaveEspacial getNave() {
+	public SpaceShip getNave() {
 		return nave;
 	}
 
-	public void setNave(NaveEspacial nave) {
+	public void setNave(SpaceShip nave) {
 		this.nave = nave;
 	}
 

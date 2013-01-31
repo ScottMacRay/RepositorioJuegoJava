@@ -58,14 +58,14 @@ public class Shoot implements Entity, Drawable {
 		 
 		// Set material properties.
 		float[] rgba = {r, g, b};
-		/*gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, rgba, 0);
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, rgba, 0);
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_SPECULAR, rgba, 0);
-		gl.glMaterialf(GL.GL_FRONT, GL.GL_SHININESS, 0.5f);*/
+		gl.glMaterialf(GL.GL_FRONT, GL.GL_SHININESS, 0.5f);
 	   
 		// Draw sphere
-		/*gl.glColor3f(r, g, b);
+		gl.glColor3f(r, g, b);
 		gl.glPushMatrix();
-		gl.glTranslatef(xCoordinate, yCoordinate+2, zCoordinate);*/
+		gl.glTranslatef(xCoordinate, yCoordinate+2, zCoordinate);
 		GLUquadric cabin = glu.gluNewQuadric();
 		glu.gluQuadricDrawStyle(cabin, GLU.GLU_FILL);
 		glu.gluQuadricNormals(cabin, GLU.GLU_FLAT);
@@ -75,7 +75,7 @@ public class Shoot implements Entity, Drawable {
 		final int stacks = 16;
 		glu.gluSphere(cabin, radius, slices, stacks);
 		glu.gluDeleteQuadric(cabin);
-		//gl.glPopMatrix();       
+		gl.glPopMatrix();       
 	}
 	
 }

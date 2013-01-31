@@ -3,24 +3,36 @@ package partidas;
 
 import intercambio.Drawable;
 
+import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GLCapabilities;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import java.util.Observable;
 import java.util.Set;
 
 import controlador.Controlador_remoto;
 
+import naves.AlienBlackSpaceShip;
 import naves.AlienSpaceShip;
-import naves.NaveEspacial;
+import naves.GuidedShoot;
+import naves.SpaceShip;
 import naves.Shoot;
+import naves.SpaceShip;
 
 import escenarios.Escenario;
+import escenarios.Planet;
+import escenarios.Space;
 import jugadores.*;
 
 //RVA: esta clase deberia ser nuestro Modelo del patron M-V-C.
-public class Partida extends Observable{
+public class Partida extends GLCanvas{
 	
+	/**
+	 * Default serial number for partida
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public static int numJugador= 0;
 	
 	int numTotal_jugadores;
@@ -32,15 +44,17 @@ public class Partida extends Observable{
 	Escenario escenario;
 	
 	//Metodo constructor
-	public Partida(int numero_jugadores, int tipo_escenario) {
+	public Partida(int numero_jugadores, int tipo_escenario, GLCapabilities capabilities) {
 		super();
 		this.numTotal_jugadores = numero_jugadores;
-		this.numTotal_aliens = 
+		this.numTotal_aliens = 3;
 		this.tipo_escenario = tipo_escenario;
 		this.dibujables= new HashSet<Drawable>();
-		
+		jugadores= new ArrayList<Jugador>();
+		aliens= new ArrayList<AlienSpaceShip>();
+		//RVA: hay que crear el escenario antes que las naves de los jugadores, porque si no no se pueden dibujar estas.
+		crearEscenario(capabilities);
 		crearJugadores();
-		crearEscenario();
 		
 	}
 
@@ -65,34 +79,42 @@ public class Partida extends Observable{
 		this.dibujables.add(jugador.getNave());
 	}
 	
-	private void crearEscenario(){
+	private void crearEscenario(GLCapabilities capabilities){
 		Controlador_remoto controlador= new Controlador_remoto(this, numJugador);
-		this.escenario= new Escenario(this.tipo_escenario, controlador);
-		crearEspacio();
-		crearPlaneta();
+		this.escenario = new Escenario(capabilities, 800, 500, 0, new Controlador_remoto(this,1));
+		//RVA: el Espacio y el Planeta se crean y recogen en el escenario:
+		//crearEspacio(this.escenario.getEspacio());
+		//crearPlaneta(this.escenario.getPlaneta());
+		
 		crearAliens();
 	}
 	
 	private void crearAliens() {
 		int i=0;
-		for (i=0; i< this.numTotal_aliens; i++){
+		for (i=0; i< this.numTotal_aliens-1; i++){
 			crearAlien();
 		}
+		crearAlienNegro();
 	}
 	
 	private void crearAlien(){
 		AlienSpaceShip alien= new AlienSpaceShip();
+		aliens.add(alien);
+		dibujables.add(alien);
+	}
+	
+	private void crearAlienNegro(){
+		AlienBlackSpaceShip alien= new AlienBlackSpaceShip();
+		aliens.add(alien);
 		dibujables.add(alien);
 	}
 
-	private void crearPlaneta() {
-		// TODO Auto-generated method stub
-		//drawables.add(new Planet());
+	private void crearPlaneta(Planet planeta) {
+		dibujables.add(planeta);
 	}
 
-	private void crearEspacio() {
-		// TODO Auto-generated method stub
-		//drawables.add(new Space());
+	private void crearEspacio(Space espacio) {
+		dibujables.add(espacio);
 		
 	}
 
@@ -107,47 +129,67 @@ public class Partida extends Observable{
 	}
 	
 	
-	//TO-DO
-	public void notificar(){
-		//RVA "pantalla" debe ser una estructura de posiciones de pantalla"
-		int pantalla= 0;
-		super.notifyObservers(pantalla);
-	}
 
 	
 	/*
 	 * RVA: este metodo debe realizar todos los calculos sobre las posiciones de las naves y calcular las colisiones.
 	 */
 	private synchronized void  calcularInfluencia() {
-		// RVA: método sincronizado, lo que fuerza la exclusión mutua si hubiera varios clientes intentando acceder al mismo tiempo
+		// RVA: metodo sincronizado, lo que fuerza la exclusion mutua si hubiera varios clientes 
+		// intentando acceder al mismo tiempo
 		
-		//Aliens
+		// RVA: booleano para saber si el disparo es de un Alien o un Jugador
+		boolean abajo= true;
+		// Aliens
 		AlienSpaceShip alien;
-		NaveEspacial nave;
 		Shoot disparo_alien;
-		int i=0, j=0, tiempo_jug=0;
-		for (i=0; i<this.numTotal_jugadores; i++){
-			nave= this.jugadores.get(i).getNave();
-			tiempo_jug= this.jugadores.get(i).getTiempo();
-			for (j=0; j<this.numTotal_aliens; j++){
-				alien= this.aliens.get(j);
-				alien.MoveShip();
-			    if (Geometry.getDistance(alien,nave) < 3) {
-			        	alien.StartPosition();
-			        	nave.LifeLost();
-			    }
-			    if (alien.getyCoordinate() < -50) alien.StartPosition();
-			 			        
-			    if ((Geometry.getAbsXDiff(alien, nave) < 1.0f && tiempo_jug == 0)) {
-			        	disparo_alien= new Shoot(alien.getxCoordinate(),alien.getyCoordinate());
-			        	this.jugadores.get(i).setTiempo(61);
-			    }
-			    //if (timeA != 0) timeA--;   
-			}
-		}
 		
-       
-        // End Aliens
+		// Nave del jugador
+		SpaceShip nave;
+		// Alien logic
+		for (AlienSpaceShip Al : aliens) {
+			Al.MoveShip();
+			if (Al.getyCoordinate() < -50) Al.StartPosition();
+			for (Jugador Jug : jugadores) {
+				if (Geometry.getDistance(Al, Jug.getNave()) < 3) {
+					Al.Destroy();
+					Jug.getNave().LifeLost();
+				}
+				if (Al instanceof AlienSpaceShip && Geometry.getAbsXDiff(Al, Jug.getNave()) < 1.0f 
+						&& Al.getTime() == 0) {
+					Al.Shoot();
+					dibujables.add(Al.getFire());
+				}
+				if (Al.getFire() != null) {
+					abajo= true;
+					Al.getFire().Move(abajo);
+		        	if (Geometry.getDistance(Jug.getNave(), Al.getFire()) < 1.5) {
+		        		Jug.getNave().LifeLost();
+		        		dibujables.remove(Al.getFire());
+		        		Al.setFire(null);
+		        	}
+				}
+				nave= Jug.getNave();
+				Shoot disparo= nave.getFire();
+				if (disparo != null) {
+					dibujables.add(disparo);
+					abajo= false;
+					disparo.Move(abajo);
+					if (Geometry.getDistance(disparo, Al) < 1.5) {
+						Al.Destroy();
+						dibujables.remove(disparo);
+						nave.setFire(null);
+						nave.setScore(nave.getScore()+ 1);
+					}
+				}
+			}
+			if (Al instanceof AlienBlackSpaceShip && Al.getTime() == 0) {
+				Al.Shoot();
+				dibujables.add(Al.getFire());
+			}
+			Al.UpdateTime();
+		}
+        
 		
 	}
 
@@ -159,34 +201,40 @@ public class Partida extends Observable{
 	    if (teclado.arriba)    moverNaveArriba(idNave);
 	    if (teclado.abajo)     moverNaveAbajo(idNave);
 	    if (!teclado.izquierda && !teclado.derecha)  equilibrarNave(idNave);
+	    if (teclado.disparo)   disparoNave(idNave);
 		calcularInfluencia();
 		return this.dibujables;
 	}
 	
+	private void disparoNave(int idNave) {
+		SpaceShip nave= this.jugadores.get(idNave).getNave();
+		nave.Shoot();
+	}
+
 	private void moverNaveAbajo(int idNave) {
-		NaveEspacial nave= this.jugadores.get(idNave).getNave();
+		SpaceShip nave= this.jugadores.get(idNave).getNave();
 		nave.MoveShipDown();
 	}
 
 	private void moverNaveIzquierda(int idNave) {
-		NaveEspacial nave= this.jugadores.get(idNave).getNave();
+		SpaceShip nave= this.jugadores.get(idNave).getNave();
 		nave.MoveShipLeft();
 	}
 
 
 	private void moverNaveDerecha(int idNave) {
-		NaveEspacial nave= this.jugadores.get(idNave).getNave();
+		SpaceShip nave= this.jugadores.get(idNave).getNave();
 		nave.MoveShipRight();
 	}
 
 	private void moverNaveArriba(int idNave) {
-		NaveEspacial nave= this.jugadores.get(idNave).getNave();
+		SpaceShip nave= this.jugadores.get(idNave).getNave();
 		nave.MoveShipUp();
 	}
 
 	private void equilibrarNave(int idNave) {
-		NaveEspacial nave= this.jugadores.get(idNave).getNave();
-		nave.MoveShipDown();
+		SpaceShip nave= this.jugadores.get(idNave).getNave();
+		nave.equilibrate();
 	}
 	
 	

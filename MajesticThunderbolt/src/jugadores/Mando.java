@@ -12,9 +12,9 @@ public class Mando extends KeyAdapter{
  * public boolean izquierda();
  * public boolean derecha();
  */
-	public Mando() {
+	public Mando(Teclas teclado1) {
 		super();
-		this.teclas= new Teclas();
+		this.teclas= teclado1;
 	}
 
 	
