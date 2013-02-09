@@ -26,14 +26,14 @@ import escenarios.Space;
 import jugadores.*;
 
 //RVA: esta clase deberia ser nuestro Modelo del patron M-V-C.
-public class Partida extends GLCanvas{
+public class Partida extends GLCanvas {
 	
 	/**
 	 * Default serial number for partida
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static int numJugador= 0;
+	private int numJugador= 0;
 	
 	int numTotal_jugadores;
 	int numTotal_aliens;
@@ -41,7 +41,7 @@ public class Partida extends GLCanvas{
 	ArrayList<Jugador> jugadores;
 	ArrayList<AlienSpaceShip> aliens;
 	Set<Drawable> dibujables;
-	Escenario escenario;
+	private Escenario escenario;
 	
 	//Metodo constructor
 	public Partida(int numero_jugadores, int tipo_escenario, GLCapabilities capabilities) {
@@ -53,7 +53,7 @@ public class Partida extends GLCanvas{
 		jugadores= new ArrayList<Jugador>();
 		aliens= new ArrayList<AlienSpaceShip>();
 		//RVA: hay que crear el escenario antes que las naves de los jugadores, porque si no no se pueden dibujar estas.
-		crearEscenario(capabilities);
+		crearAliens();
 		crearJugadores();
 		
 	}
@@ -80,8 +80,7 @@ public class Partida extends GLCanvas{
 	}
 	
 	private void crearEscenario(GLCapabilities capabilities){
-		Controlador_remoto controlador= new Controlador_remoto(this, numJugador);
-		this.escenario = new Escenario(capabilities, 800, 500, 0, new Controlador_remoto(this,1));
+		//this.setEscenario(new Escenario(capabilities, 800, 500, 0));
 		//RVA: el Espacio y el Planeta se crean y recogen en el escenario:
 		//crearEspacio(this.escenario.getEspacio());
 		//crearPlaneta(this.escenario.getPlaneta());
@@ -235,6 +234,19 @@ public class Partida extends GLCanvas{
 	private void equilibrarNave(int idNave) {
 		SpaceShip nave= this.jugadores.get(idNave).getNave();
 		nave.equilibrate();
+	}
+
+	public Escenario getEscenario() {
+		return escenario;
+	}
+
+	public void setEscenario(Escenario escenario) {
+		this.escenario = escenario;
+	}
+
+	public int inicializarCliente() {
+		this.numJugador++;
+		return this.numJugador;
 	}
 	
 	

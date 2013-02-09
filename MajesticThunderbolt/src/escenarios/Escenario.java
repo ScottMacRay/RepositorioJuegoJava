@@ -4,6 +4,7 @@ import intercambio.Drawable;
 
 
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.media.opengl.DebugGL;
@@ -36,11 +37,13 @@ public class Escenario extends GLCanvas implements GLEventListener{
 	int tipo;
 	/*RVA: Este atributo debe ser una estructura de datos que nos permita dibujar r�pidamente la pantalla,
 	como una matriz de posiciones*/
+	
 	Set<Drawable> dibujables;
 	Teclas teclado;
 	Controlador_remoto controlador;
 	private Space espacio;
 	private Planet planeta;
+	private int idCliente; 
 
 	
 	public Escenario(GLCapabilities capabilities, int i, int j, int tipo, Controlador_remoto controlador1) {
@@ -49,7 +52,8 @@ public class Escenario extends GLCanvas implements GLEventListener{
 		this.tipo = tipo;
 		this.teclado= new Teclas();
 		this.controlador= controlador1;
-		
+		this.idCliente= controlador.inicializarCliente();
+		this.dibujables= new HashSet<Drawable>();
 	}
 
 
@@ -82,7 +86,9 @@ public class Escenario extends GLCanvas implements GLEventListener{
 	     gl.glEnable(GL.GL_LIGHT1);
 	     gl.glEnable(GL.GL_LIGHTING);
          
-	     this.dibujables= this.controlador.recogerAcciones(this.teclado);
+	     this.controlador.enviarAccion(this.teclado, this.idCliente);
+	     //RVA: ahora no recibimos los dibujables, sino que debemos crearlos en el cliente/Escenario
+	     
 	     //RVA: tengo que añadir el planeta y el espacio:
 	     this.dibujables.add(this.espacio);
 	     this.dibujables.add(this.planeta);

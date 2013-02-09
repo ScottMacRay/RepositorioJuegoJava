@@ -22,9 +22,10 @@ public class Jugador {
 	public Jugador(String nombre, int creditos, int numero1) {
 		super();
 		this.nombre = nombre;
-		this.numero= numero1;
-		this.creditos = creditos;
 		this.nave = new SpaceShip();
+		this.numero= this.nave.getIdNave();
+		this.creditos = creditos;
+		
 	}
 
 

@@ -1,5 +1,7 @@
 package partidas;
 
+import intercambio.InterfazClienteServidor;
+
 import java.rmi.*;
 
 public class Registrador {
@@ -10,10 +12,10 @@ public class Registrador {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void atenderLlamadas() throws Exception{
+	public void atenderLlamadas(InterfazClienteServidor objetoRemoto) throws Exception{
 		try{
-			IRemoto objetoRemoto = new Remoto();
-			Naming.rebind("saludos", objetoRemoto); //registra un objeto con ese nombre.
+			//RVA: antes se creaba aqui el objetoRemoto
+			Naming.rebind("MajesticThunderbolt", objetoRemoto); //registra un objeto con ese nombre.
 			System.out.println("He arrancado el registrador");
 		} catch (Exception e){
 			e.printStackTrace();

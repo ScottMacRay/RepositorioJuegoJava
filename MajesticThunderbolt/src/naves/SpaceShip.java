@@ -26,7 +26,7 @@ public class SpaceShip implements Entity, Drawable {
 	Shoot fire;
 	static private int iDCont= 1;
 	private static synchronized int next() {return iDCont++;}
-	int color= next();
+	int idNave= next();
 	
 	
 	public SpaceShip() {
@@ -122,14 +122,15 @@ public class SpaceShip implements Entity, Drawable {
 		this.zCoordinate = zCoordinate;
 	}
 
-	public int getColor() {
-		return color;
+	
+	public int getIdNave() {
+		return idNave;
 	}
 
-	public void setColor(int color) {
-		this.color = color;
+	public void setIdNave(int idNave) {
+		this.idNave = idNave;
 	}
-	
+
 	public int getLives() {
 		return lives;
 	}
@@ -174,7 +175,7 @@ public class SpaceShip implements Entity, Drawable {
 		
 		Sound.music("explosion.wav");
 		
-		switch (color) {
+		switch (idNave) {
 			case 1: xCoordinate= -37; yCoordinate= -37; zCoordinate= 0; break;
 			case 2: xCoordinate= 37; yCoordinate= -37; zCoordinate= 0; break;
 			case 3: xCoordinate= -19; yCoordinate= -37; zCoordinate= 0; break;
@@ -206,7 +207,7 @@ public class SpaceShip implements Entity, Drawable {
 		GL gl = drawable.getGL();
 		 float r, g, b;
 		 
-		 switch (color) {
+		 switch (idNave) {
 		 	case 1: r= 0.9f; g= 0.5f; b= 0.2f; break;
 		 	case 2: r= 0.2f; g= 0.5f; b= 0.9f; break;
 		 	case 3: r= 0.5f; g= 0.9f; b= 0.2f; break;
@@ -250,7 +251,7 @@ public class SpaceShip implements Entity, Drawable {
        
        // Score & Lives
        float xPos;
-       switch (color) {
+       switch (idNave) {
        	case 1: xPos= -65.0f; break;
        	case 2: xPos= -32.0f; break;
        	case 3: xPos= 0.0f; break;
