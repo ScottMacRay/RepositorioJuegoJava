@@ -1,14 +1,15 @@
 package controlador;
 
 
+import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+
+import sincronizacionRMI.InterfazClienteServidor;
 
 
 import modelo.ClienteRemoto;
 
-
-import sincronizacionRMI.InterfazClienteServidor;
 
 
 
@@ -27,9 +28,13 @@ public class ControladorServidorRemoto {
 	//Metodo constructor
 	public ControladorServidorRemoto() {
 		try {
+			String servidor_hostname="127.0.0.1";//RVA: modificar por IP de la máquina
+			String portNum = "1099";
+//            int RMIPortNum = Integer.parseInt(portNum);
+            String registryURL = "rmi://" + servidor_hostname + ":"+ portNum + "/MajesticThunderbolt";
+            
 			//RVA: ¡Hay que modificar la direccion IP tras las pruebas unitarias!
-			this.registrador= LocateRegistry.getRegistry("127.0.0.1");
-			this.ir = (InterfazClienteServidor) this.registrador.lookup("MajesticThunderbolt");
+			this.ir = (InterfazClienteServidor) Naming.lookup(registryURL);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

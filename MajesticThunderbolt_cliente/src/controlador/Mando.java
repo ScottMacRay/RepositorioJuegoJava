@@ -130,6 +130,7 @@ public class Mando extends KeyAdapter{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			System.out.println("Se devuelve el identificador del cliente");
 			return idCliente;
 			
 		}

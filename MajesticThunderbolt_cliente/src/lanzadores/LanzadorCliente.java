@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 
 import modelo.PartidaLocal;
 
-
 import controlador.ControladorServidorRemoto;
 import controlador.Mando;
 
@@ -35,11 +34,17 @@ public class LanzadorCliente {
 	 * @param not know if we will need arguments
 	 */
 	public static void main(String[] args) {
-		try {
 			//RVA: a falta de plug-in debemos incluirlo manualmente.
-			if (System.getSecurityManager() == null) {
-				System.setSecurityManager(new RMISecurityManager());
-			}
+			String cliente_hostname="127.0.0.1";//RVA: modificar por IP de la máquina
+	    	
+	    	System.setProperty("java.rmi.server.hostname", cliente_hostname);
+	        System.setProperty("java.security.policy", "file:/home/duque_leto/workspace/MajesticThunderbolt_cliente/java.policy");
+	        System.setProperty("java.rmi.server.codebase", "file:/home/duque_leto/workspace/MajesticThunderbolt_cliente/bin/ file:/home/duque_leto/workspace/InterfazComun/bin/");
+	        if(System.getSecurityManager() == null)
+	            System.setSecurityManager(new RMISecurityManager());
+	        try
+	        {
+	            
 			//RVA: le pasamos el numero de jugadores y el tipo de escenario
 			PartidaLocal partida = new PartidaLocal(2, 1);
 			Mando controlador= new Mando(partida);
