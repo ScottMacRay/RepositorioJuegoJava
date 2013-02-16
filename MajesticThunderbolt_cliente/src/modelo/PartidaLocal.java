@@ -26,16 +26,14 @@ import vista.Sound;
 
 //RVA: esta clase deberia ser nuestro Modelo del patron M-V-C.
 public class PartidaLocal extends Observable {
-	
-	private int numJugador= 0;
+	//RVA: identificador unico del cliente, asignado por servidor.
+    int idCliente= 0;
 	int numTotal_jugadores;
 	int numTotal_aliens;
 	int tipo_escenario;
 	ArrayList<SpaceShip> navesJug;
 	ArrayList<AlienSpaceShip> aliens;
 	Set<Drawable> dibujables;
-	//RVA: identificador unico del cliente, asignado por servidor.
-    int idCliente= 0;
 	//RVA: cambio en el framework, ahora es la PartidaLocal la que se comunica con el controlador Remoto.
 	ControladorServidorRemoto controladorRemoto;
 	ClienteRemoto clienteRemoto;
@@ -65,12 +63,12 @@ public class PartidaLocal extends Observable {
 	private void crearNavesJugadores(){
 		int i=0;
 		for (i=0; i< this.numTotal_jugadores; i++){
-			crearNaveJugador();
+			crearNaveJugador(i+1);//RVA: los identificadores de naves empiezan en 1.
 		}
 	}
 	
-	private void crearNaveJugador(){
-		SpaceShip naveJug= new SpaceShip(this.numJugador);
+	private void crearNaveJugador(int contador){
+		SpaceShip naveJug= new SpaceShip(contador);
 		this.navesJug.add(naveJug);
 		this.dibujables.add(naveJug);
 	}
@@ -169,14 +167,14 @@ public class PartidaLocal extends Observable {
 	}
 
 
-	private void disparoDirigido(int idAlien) {
+	public void disparoDirigido(int idAlien) {
 		AlienSpaceShip alien= this.aliens.get(idAlien);
 		alien.Shoot();
 		dibujables.add(alien.getFire());
 		
 	}
 
-	private void destruccionAlien(int idAlien, int idNave) {
+	public void destruccionAlien(int idAlien, int idNave) {
 		//AlienSpaceShip alien= this.aliens.get(idAlien);
 		SpaceShip nave = this.navesJug.get(idNave);
 		/* RVA: no podemos invocar a este metodo porque redibuja la nave aleatoriamente, esto debe dejarse al servidor
@@ -192,7 +190,7 @@ public class PartidaLocal extends Observable {
 		nave.setScore(nave.getScore()+ 1);
 	}
 
-	private void destruccionNaveJug(int idNave, int idAlien) {
+	public void destruccionNaveJug(int idNave, int idAlien) {
 		SpaceShip nave = this.navesJug.get(idNave);
 		AlienSpaceShip alien = this.aliens.get(idAlien);
 		nave.LifeLost();
@@ -201,7 +199,7 @@ public class PartidaLocal extends Observable {
 		
 	}
 
-	private void disparoAlien(int idAlien) {
+	public void disparoAlien(int idAlien) {
 		AlienSpaceShip alien = this.aliens.get(idAlien);
 		alien.Shoot();
 		dibujables.add(alien.getFire());
@@ -224,11 +222,11 @@ public class PartidaLocal extends Observable {
 		
 	}
 	
-	public void regeneracionAlien(int idAlien, int x, int y, int z, boolean left){
+	public void regeneracionAlien(int idAlien, float xCoordinate, float yCoordinate, float zCoordinate, boolean left){
 		AlienSpaceShip alien= this.aliens.get(idAlien);
-		alien.setxCoordinate(x);
-		alien.setxCoordinate(y);
-		alien.setzCoordinate(z);
+		alien.setxCoordinate(xCoordinate);
+		alien.setxCoordinate(yCoordinate);
+		alien.setzCoordinate(zCoordinate);
 		alien.setLeft(left);
 	}
 

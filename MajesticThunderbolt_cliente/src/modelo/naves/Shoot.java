@@ -53,7 +53,11 @@ public class Shoot implements Entity, Drawable {
 			yCoordinate += 0.8;
 		}
 	}
-
+	/*
+	 * @author Alejandro
+	 * @see modelo.Drawable#Draw(javax.media.opengl.GLAutoDrawable)
+	 * TODO Alejandro,se dibuja el disparo varias veces.
+	 */
 	public void Draw(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
 		float r= 1f, g= 1f, b= 1f;

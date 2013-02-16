@@ -22,6 +22,10 @@ public class Sound {
 		}.start();
 	}
 	
+	/*
+	 * RVA: este metodo falla si el fichero de musica no esta en la raiz del proyecto
+	 * TODO: Alejandro!
+	 */
 	public static void BGmusic(final String file) {
 		new Thread() {
 			public void run() {

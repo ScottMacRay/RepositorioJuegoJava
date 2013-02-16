@@ -30,9 +30,7 @@ public class ControladorServidorRemoto {
 		try {
 			String servidor_hostname="127.0.0.1";//RVA: modificar por IP de la máquina
 			String portNum = "1099";
-//            int RMIPortNum = Integer.parseInt(portNum);
             String registryURL = "rmi://" + servidor_hostname + ":"+ portNum + "/MajesticThunderbolt";
-            
 			//RVA: ¡Hay que modificar la direccion IP tras las pruebas unitarias!
 			this.ir = (InterfazClienteServidor) Naming.lookup(registryURL);
 		} catch (Exception e) {

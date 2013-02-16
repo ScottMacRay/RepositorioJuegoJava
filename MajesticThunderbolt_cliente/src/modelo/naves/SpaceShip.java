@@ -189,7 +189,8 @@ public class SpaceShip implements Entity, Drawable {
 	public void equilibrate() {
 		if (rotation > 0) {
 			rotation -= 5;
-		} else {
+		//RVA: solo se debe equilibrar la nave si estaba desequilibrada
+		} else if (rotation < 0) {
 			rotation += 5;
 		}
 	}

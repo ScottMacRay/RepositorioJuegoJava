@@ -63,25 +63,25 @@ public class ClienteRemoto extends UnicastRemoteObject implements InterfazServid
 
 	@Override
 	public void disparoAlien(int idAlien) throws RemoteException {
-		// TODO Auto-generated method stub
+		this.partida.disparoAlien(idAlien);
 		
 	}
 
 	@Override
 	public void destruccionNave(int idNave2, int idAlien) throws RemoteException {
-		// TODO Auto-generated method stub
+		this.partida.destruccionNaveJug(idNave2, idAlien);
 		
 	}
 
 	@Override
 	public void destruccionAlien(int idNave2, int idAlien) throws RemoteException {
-		// TODO Auto-generated method stub
+		this.partida.destruccionAlien(idAlien, idNave2);
 		
 	}
 
 	@Override
 	public void disparoDirigido(int idAlien) throws RemoteException {
-		// TODO Auto-generated method stub
+		this.partida.disparoDirigido(idAlien);
 		
 	}
 
@@ -89,21 +89,21 @@ public class ClienteRemoto extends UnicastRemoteObject implements InterfazServid
 	@Override
 	public void regeneracionAlien(int idAlien, float xCoordinate,
 			float yCoordinate, float zCoordinate, boolean left) throws RemoteException{
-		// TODO Auto-generated method stub
+		this.partida.regeneracionAlien(idAlien, xCoordinate, yCoordinate, zCoordinate, left);
 		
 	}
 
 	@Override
 	public void crearAlien(float xCoordinate, float yCoordinate,
 			float zCoordinate, boolean left) throws RemoteException {
-		// TODO Auto-generated method stub
+		this.partida.crearAlien(xCoordinate, yCoordinate, zCoordinate, left);
 		
 	}
 
 	@Override
 	public void crearBlackAlien(float getxCoordinate, float getyCoordinate,
 			float getzCoordinate, boolean left) throws RemoteException {
-		// TODO Auto-generated method stub
+		this.partida.crearAlienNegro(getxCoordinate, getyCoordinate, getzCoordinate, left);
 		
 	}
 
