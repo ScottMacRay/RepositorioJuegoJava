@@ -2,6 +2,8 @@ package modelo;
 
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import sincronizacionRMI.InterfazClienteServidor;
@@ -20,10 +22,7 @@ public class ServidorRemoto extends UnicastRemoteObject implements InterfazClien
 	 * RVA: metodo constructor.
 	 */
 	public ServidorRemoto(PartidaServidor partida) throws RemoteException {
-		super();
-		if (System.getSecurityManager() == null) {
-			System.setSecurityManager(new RMISecurityManager());
-		}
+		//RVA: aqui estaba la creacion de seguridad que ahra va en el lanzador
 		this.partida = partida;
 	}
 

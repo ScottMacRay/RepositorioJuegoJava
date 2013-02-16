@@ -1,18 +1,9 @@
 package modelo;
 
-
-
-
-
-import modelo.naves.AlienBlackSpaceShip;
-import modelo.naves.AlienSpaceShip;
-import modelo.naves.Shoot;
-import modelo.naves.SpaceShip;
-
+import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
+
 
 
 import sincronizacionRMI.InterfazServidorCliente;
@@ -40,8 +31,8 @@ public class PartidaServidor {
 	int numTotal_jugadores;
 	int numTotal_aliens;
 	int tipo_escenario;
-	ArrayList<SpaceShip> navesJug;
-	ArrayList<AlienSpaceShip> aliens;
+	ArrayList<SombraNave> navesJug;
+	ArrayList<SombraNave> aliens;
 	ArrayList<InterfazServidorCliente> clientes;
 	//RVA: este controlador deberia ser un arraylist de controladores. Por el momento no se está usando.
 	//TODO: Alejandro!
@@ -52,8 +43,8 @@ public class PartidaServidor {
 		super();
 		//this.numTotal_jugadores = numero_jugadores;
 		this.numTotal_aliens = 3;
-		navesJug= new ArrayList<SpaceShip>();
-		aliens= new ArrayList<AlienSpaceShip>();
+		navesJug= new ArrayList<SombraNave>();
+		aliens= new ArrayList<SombraNave>();
 		//RVA: ¿hay que crear el escenario antes que las naves de los jugadores, porque si no no se pueden dibujar estas?
 		//RVA: no puedo crear los Aliens y Naves hasta que todos los clientes no se hayan iniciado
 		this.controladorRemoto= controlador1;
@@ -67,7 +58,7 @@ public class PartidaServidor {
 	}
 	
 	private void crearNaveJugador(){
-		SpaceShip naveJug= new SpaceShip(this.numJugador);
+		SombraNave naveJug= new SombraNave();
 		this.navesJug.add(naveJug);
 	}
 	
@@ -81,28 +72,36 @@ public class PartidaServidor {
 	}
 	
 	private void crearAlien(){
-		AlienSpaceShip alien= new AlienSpaceShip();
+		SombraNave alien= new SombraNave();
 		this.aliens.add(alien);
 		alien= calculoCoordenadasAlien(alien);
 		for (InterfazServidorCliente cliente: this.clientes) {
-			cliente.crearAlien(alien.getxCoordinate(), alien.getyCoordinate(),
-								alien.getzCoordinate(), alien.isLeft());
+			try {
+				cliente.crearAlien(alien.getxCoordinate(), alien.getyCoordinate(),
+									alien.getzCoordinate(), alien.isLeft());
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	
 
 	private void crearAlienNegro(){
-		AlienBlackSpaceShip alien= new AlienBlackSpaceShip();
+		SombraNave alien= new SombraNave();
 		aliens.add(alien);
-		alien= (AlienBlackSpaceShip) calculoCoordenadasAlien(alien);
+		alien=  calculoCoordenadasAlien(alien);
 		for (InterfazServidorCliente cliente: this.clientes) {
-			cliente.crearBlackAlien(alien.getxCoordinate(), alien.getyCoordinate(),
-								alien.getzCoordinate(), alien.isLeft());
+			try {
+				cliente.crearBlackAlien(alien.getxCoordinate(), alien.getyCoordinate(),
+									alien.getzCoordinate(), alien.isLeft());
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
-	private AlienSpaceShip calculoCoordenadasAlien(AlienSpaceShip alien) {
+	private SombraNave calculoCoordenadasAlien(SombraNave alien) {
 		
 		Random rand= new Random();
 		alien.setxCoordinate(rand.nextFloat()*100 - 50);
@@ -135,13 +134,23 @@ public class PartidaServidor {
 	
 	void disparoNave(int idNave, int idCliente) {
 		for (InterfazServidorCliente cliente: this.clientes){
-			cliente.dispararNave(idNave);
+			try {
+				cliente.dispararNave(idNave);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
 	void moverNaveAbajo(int idNave, int idCliente) {
 		for (InterfazServidorCliente cliente: this.clientes){
-			cliente.moverNaveAbajo(idNave);
+			try {
+				cliente.moverNaveAbajo(idNave);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -149,7 +158,12 @@ public class PartidaServidor {
 	void moverNaveIzquierda(int idNave, int idCliente) {
 		for (InterfazServidorCliente cliente: this.clientes){
 			if (this.clientes.indexOf(cliente) != idCliente) {  
-				cliente.moverNaveIzquierda(idNave);
+				try {
+					cliente.moverNaveIzquierda(idNave);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -158,7 +172,12 @@ public class PartidaServidor {
 	void moverNaveDerecha(int idNave, int idCliente) {
 		for (InterfazServidorCliente cliente: this.clientes){
 			if (this.clientes.indexOf(cliente) != idCliente) {
-				cliente.moverNaveDerecha(idNave);
+				try {
+					cliente.moverNaveDerecha(idNave);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -166,7 +185,12 @@ public class PartidaServidor {
 	void moverNaveArriba(int idNave, int idCliente) {
 		for (InterfazServidorCliente cliente: this.clientes){
 			if (this.clientes.indexOf(cliente) != idCliente) {
-				cliente.moverNaveArriba(idNave);
+				try {
+					cliente.moverNaveArriba(idNave);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -175,7 +199,12 @@ public class PartidaServidor {
 	void equilibrarNave(int idNave, int idCliente) {
 		for (InterfazServidorCliente cliente: this.clientes){
 			if (this.clientes.indexOf(cliente) != idCliente) {
-				cliente.equilibrarNave(idNave);
+				try {
+					cliente.equilibrarNave(idNave);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -194,10 +223,15 @@ public class PartidaServidor {
 			left= false;
 		}
 		for (InterfazServidorCliente cliente: this.clientes){
-			if (this.clientes.indexOf(cliente) != idCliente) {
-				cliente.colision(idNave);
+			try {
+				if (this.clientes.indexOf(cliente) != idCliente) {
+					cliente.colision(idNave);
+				}
+				cliente.regeneracionAlien(idAlien, xCoordinate, yCoordinate, zCoordinate, left);
+			} catch (RemoteException re){
+				re.printStackTrace();
 			}
-			cliente.regeneracionAlien(idAlien, xCoordinate, yCoordinate, zCoordinate, left);
+			
 		}
 		
 	}
@@ -215,10 +249,15 @@ public class PartidaServidor {
 			left= false;
 		}
 		for (InterfazServidorCliente cliente: this.clientes) {
-			if (this.clientes.indexOf(cliente) != idCliente) { 
-				cliente.destruccionAlien(idNave2, idAlien);
+			try{
+				if (this.clientes.indexOf(cliente) != idCliente) { 
+					cliente.destruccionAlien(idNave2, idAlien);
+				}
+				cliente.regeneracionAlien(idAlien, xCoordinate, yCoordinate, zCoordinate, left);
+			} catch (RemoteException re) {
+				re.printStackTrace();
 			}
-			cliente.regeneracionAlien(idAlien, xCoordinate, yCoordinate, zCoordinate, left);
+			
 		}
 		
 	}
@@ -226,7 +265,12 @@ public class PartidaServidor {
 	public void disparoAlien(int idAlien, int idCliente) {
 		for (InterfazServidorCliente cliente: this.clientes){
 			if (this.clientes.indexOf(cliente) != idCliente) {
-				cliente.disparoAlien(idAlien);
+				try {
+					cliente.disparoAlien(idAlien);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -235,7 +279,11 @@ public class PartidaServidor {
 	public void destruccionNave(int idNave2, int idAlien, int idCliente) {
 		for (InterfazServidorCliente cliente: this.clientes){
 			if (this.clientes.indexOf(cliente) != idCliente) {
-				cliente.destruccionNave(idNave2, idAlien);
+				try {
+					cliente.destruccionNave(idNave2, idAlien);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -243,7 +291,12 @@ public class PartidaServidor {
 	public void disparoDirigido(int idAlien, int idCliente) {
 		for (InterfazServidorCliente cliente: this.clientes){
 			if (this.clientes.indexOf(cliente) != idCliente) {
-				cliente.disparoDirigido(idAlien);
+				try {
+					cliente.disparoDirigido(idAlien);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
