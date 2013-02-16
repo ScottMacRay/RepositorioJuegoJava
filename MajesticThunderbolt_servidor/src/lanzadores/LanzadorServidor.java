@@ -31,7 +31,7 @@ public class LanzadorServidor {
 	            int RMIPortNum = Integer.parseInt(portNum);
 	            startRegistry(RMIPortNum);
 	            ControladorClienteRemoto controlador= new ControladorClienteRemoto();
-				PartidaServidor partida= new PartidaServidor(2,1, controlador);
+				PartidaServidor partida= new PartidaServidor(1,1, controlador);
 				ServidorRemoto objetoRemoto = new ServidorRemoto(partida);
 	            String registryURL = (new StringBuilder("rmi://:")).append(portNum).append("/MajesticThunderbolt").toString();
 	            Naming.rebind(registryURL, objetoRemoto);

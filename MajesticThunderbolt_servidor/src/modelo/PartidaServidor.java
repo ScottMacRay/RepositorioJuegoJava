@@ -41,8 +41,9 @@ public class PartidaServidor {
 	//Metodo constructor
 	public PartidaServidor(int numero_jugadores, int tipo_escenario, ControladorClienteRemoto controlador1) {
 		super();
-		//this.numTotal_jugadores = numero_jugadores;
+		this.numTotal_jugadores = numero_jugadores;
 		this.numTotal_aliens = 3;
+		clientes = new ArrayList<InterfazServidorCliente>();
 		navesJug= new ArrayList<SombraNave>();
 		aliens= new ArrayList<SombraNave>();
 		//RVA: ¿hay que crear el escenario antes que las naves de los jugadores, porque si no no se pueden dibujar estas?
@@ -79,10 +80,14 @@ public class PartidaServidor {
 			try {
 				cliente.crearAlien(alien.getxCoordinate(), alien.getyCoordinate(),
 									alien.getzCoordinate(), alien.isLeft());
+				
 			} catch (RemoteException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("RVA: si sigue es que la llamada remota ha sido correcta...");
 	}
 	
 	
@@ -127,7 +132,7 @@ public class PartidaServidor {
 		if (this.numJugador == this.numTotal_jugadores) {
 			inicializacionNaves();
 		}
-		//RVA: le restamos uno porque el array empieza en 0.
+		//RVA: le restamos uno porque el array de clientes empieza en 0.
 		return (this.numJugador -1);
 	}
 
