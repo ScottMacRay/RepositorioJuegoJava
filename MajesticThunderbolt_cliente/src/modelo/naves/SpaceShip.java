@@ -76,6 +76,10 @@ public class SpaceShip implements Entity, Drawable {
 		this.fire = fire;
 	}
 
+	public void UpdateTime(){
+		if (this.time>0) this.time--;
+	}
+	
 	public int getTime() {
 		return time;
 	}

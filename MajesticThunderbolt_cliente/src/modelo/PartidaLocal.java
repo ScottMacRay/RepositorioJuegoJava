@@ -114,6 +114,7 @@ public class PartidaLocal extends Observable {
 			for (SpaceShip nave : this.navesJug) {
 				//RVA: variable auxiliar para determinar la nave del jugador en la lista.
 				int idNave= navesJug.indexOf(nave);
+				nave.UpdateTime();
 				if (Geometry.getDistance(alien, nave) < 3) {
 					colisionar(idNave);
 					if (this.controladorRemoto!=null) {
@@ -257,7 +258,13 @@ public class PartidaLocal extends Observable {
 	
 	public void disparoNave(int idNave) {
 		SpaceShip nave= this.navesJug.get(idNave);
-		nave.Shoot();
+		//RVA: correccion para evitar varios disparos en pantalla.
+		if (nave.getTime()==0) {
+			dibujables.remove(nave.getFire());
+			//nave.setFire(null);
+			nave.Shoot();
+		}
+		
 	}
 
 	public void moverNaveAbajo(int idNave) {

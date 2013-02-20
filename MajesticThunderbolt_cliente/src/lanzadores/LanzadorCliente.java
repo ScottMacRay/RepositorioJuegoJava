@@ -46,7 +46,7 @@ public class LanzadorCliente {
 	        {
 	            
 			//RVA: le pasamos el numero de jugadores y el tipo de escenario
-			PartidaLocal partida = new PartidaLocal(1, 1);
+			PartidaLocal partida = new PartidaLocal(2, 1);
 			Mando controlador= new Mando(partida);
 			GLCapabilities capabilities = createGLCapabilities();
 			Escenario canvas = new Escenario(capabilities, 800, 500, 0, controlador);
